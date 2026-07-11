@@ -42,7 +42,9 @@ jobs:
             images/postmarketos-redmi4a-rolex-icewm.img.xz \
             images/lk2nd.img \
             images/SHA256SUMS \
+            phone-setup.sh \
             || gh release upload "$TAG" --clobber \
                  images/postmarketos-redmi4a-rolex-icewm.img.xz \
                  images/lk2nd.img \
-                 images/SHA256SUMS
+                 images/SHA256SUMS \
+                 phone-setup.sh
