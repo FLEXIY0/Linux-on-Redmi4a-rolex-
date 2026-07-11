@@ -34,21 +34,25 @@ startx
 
 ## Прошивка
 
+Готовый образ: `images/postmarketos-redmi4a-rolex-icewm.img.xz` (разбит на части,
+см. `images/README.md`) + `images/lk2nd.img`.
+
 1. Разблокированный загрузчик обязателен.
-2. Прошить lk2nd (один раз):
+2. Прошить lk2nd (один раз) из обычного fastboot (Vol-Down + Power):
    ```sh
-   fastboot flash boot lk2nd-msm8952.img   # берётся из чрута pmbootstrap
+   fastboot flash boot lk2nd.img
+   fastboot reboot
    ```
-   Затем перезагрузиться, удерживая **Vol-Down**, чтобы попасть в fastboot самого lk2nd.
-3. Прошить систему:
+   При загрузке удерживать **Vol-Down**, чтобы попасть в fastboot самого lk2nd.
+3. Распаковать и прошить систему в fastboot lk2nd:
    ```sh
-   pmbootstrap flasher flash_rootfs
-   pmbootstrap flasher flash_kernel
+   xz -d postmarketos-redmi4a-rolex-icewm.img.xz
+   fastboot flash userdata postmarketos-redmi4a-rolex-icewm.img
+   fastboot reboot
    ```
-   или вручную через fastboot в lk2nd:
-   ```sh
-   fastboot flash userdata qcom-msm89x7.img
-   fastboot flash boot qcom-msm89x7-boot.img
-   ```
+   Отдельный boot.img не нужен: образ содержит разделы pmOS_boot и pmOS_root,
+   lk2nd грузит ядро через extlinux. При сборке через `./build.sh` то же самое
+   делается командами `pmbootstrap flasher flash_lk2nd` и
+   `pmbootstrap flasher flash_rootfs`.
 
 Подробнее: https://wiki.postmarketos.org/wiki/Xiaomi_Redmi_4A_(xiaomi-rolex)
