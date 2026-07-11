@@ -32,10 +32,15 @@ startx
 и собирает образы. Результат: `qcom-msm89x7.img` (rootfs) и
 `qcom-msm89x7-boot.img` в `~/.local/var/pmbootstrap/chroot_native/home/pmos/rootfs/`.
 
-## Прошивка
+## Установка
 
-Готовый образ: `images/postmarketos-redmi4a-rolex-icewm.img.xz` (разбит на части,
-см. `images/README.md`) + `images/lk2nd.img`.
+**Скачать готовый образ одним файлом:**
+[Releases](https://github.com/FLEXIY0/Linux-on-Redmi4a-rolex-/releases) —
+там лежат `postmarketos-redmi4a-rolex-icewm.img.xz` (целиком, клеить ничего
+не нужно) и `lk2nd.img`. Части в `images/` — запасной вариант
+(см. `images/README.md`).
+
+Понадобятся: кабель USB, `fastboot` (android-tools) и `xz` на компьютере.
 
 1. Разблокированный загрузчик обязателен.
 2. Прошить lk2nd (один раз) из обычного fastboot (Vol-Down + Power):

@@ -1,0 +1,41 @@
+name: Publish release with full image
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag"
+        required: false
+        default: "v1.0"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Reassemble image from parts
+        run: |
+          cd images
+          cat postmarketos-redmi4a-rolex-icewm.img.xz.part* > postmarketos-redmi4a-rolex-icewm.img.xz
+          grep 'part\|lk2nd' SHA256SUMS | sha256sum -c -
+          sha256sum postmarketos-redmi4a-rolex-icewm.img.xz
+
+      - name: Create release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="${{ github.event.inputs.tag || 'v1.0' }}"
+          gh release create "$TAG" \
+            --title "postmarketOS для Redmi 4A (rolex) с IceWM" \
+            --notes "Целый образ одним файлом — скачай, распакуй xz и прошей (инструкция в README.md). Пользователь: user, пароль: postmarketos." \
+            images/postmarketos-redmi4a-rolex-icewm.img.xz \
+            images/lk2nd.img \
+            images/SHA256SUMS \
+            || gh release upload "$TAG" --clobber \
+                 images/postmarketos-redmi4a-rolex-icewm.img.xz \
+                 images/lk2nd.img \
+                 images/SHA256SUMS
