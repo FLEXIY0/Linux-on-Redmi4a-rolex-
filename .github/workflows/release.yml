@@ -1,6 +1,9 @@
 name: Publish release with full image
 
 on:
+  push:
+    tags:
+      - "v*"
   workflow_dispatch:
     inputs:
       tag:
@@ -28,7 +31,11 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          TAG="${{ github.event.inputs.tag || 'v1.0' }}"
+          if [ "${{ github.ref_type }}" = "tag" ]; then
+            TAG="${{ github.ref_name }}"
+          else
+            TAG="${{ github.event.inputs.tag || 'v1.0' }}"
+          fi
           gh release create "$TAG" \
             --title "postmarketOS для Redmi 4A (rolex) с IceWM" \
             --notes "Целый образ одним файлом — скачай, распакуй xz и прошей (инструкция в README.md). Пользователь: user, пароль: postmarketos." \
